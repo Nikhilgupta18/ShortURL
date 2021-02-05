@@ -2,8 +2,8 @@ from django.urls import path,include
 from . import views
 
 urlpatterns = [
-    path('',views.Home.as_view(), name = 'index'),
+    path('', views.index, name='index'),
+    path('create/',views.Create.as_view(), name = 'create'),
     path('url/delete/<int:id>',views.delete_url, name = 'delete'),
-    path('url/<slug:shortcode>',views.url, name = 'url'),
-#     path('url/delete/<int:id>',delete_url_id, name = 'delete_url'),
+    path('<slug:shortcode>',views.url, name = 'url'),
 ]
