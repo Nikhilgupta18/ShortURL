@@ -57,7 +57,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'UrlShortener.urls'
 ROOT_HOSTCONF = 'UrlShortener.hosts'
-DEFAULT_HOST = 'ngsu'
+DEFAULT_HOST = 'www'
 DEFAULT_REDIRECT_URL = "https://ngsu.herokuapp.com"
 PARENT_HOST = "herokuapp.com"
 
