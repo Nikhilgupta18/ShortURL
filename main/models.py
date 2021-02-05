@@ -35,6 +35,6 @@ class UrlShort(models.Model):
         return self.Url
 
     def get_short_url(self):
-        url_path = reverse("url", kwargs={'shortcode': self.Short}, host='www', scheme='http')
+        url_path = reverse("url", kwargs={'shortcode': self.Short}, host='ngsu', scheme='https')
         return url_path
 
