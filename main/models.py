@@ -1,6 +1,9 @@
 from django.db import models
 
 from .utils import code_generator, create_shortcode
+from .validators import validate_url
+
+from django_hosts.resolvers import reverse
 
 
 class UrlShortManager(models.Manager):
@@ -11,7 +14,7 @@ class UrlShortManager(models.Manager):
 
 
 class UrlShort(models.Model):
-    Url = models.CharField(max_length=200)
+    Url = models.CharField(max_length=200, validators=[validate_url])
     Short = models.CharField(max_length=15, unique=True, blank=True)
     Updated = models.DateTimeField(auto_now=True)
     Time = models.DateTimeField(auto_now_add=True)
@@ -24,9 +27,14 @@ class UrlShort(models.Model):
     def save(self, *args, **kwargs):
         if not self.Short:
             self.Short = create_shortcode(self)
+        if not "http" in self.Url:
+            self.Url = "http://" + self.Url
         super(UrlShort, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.Url
 
+    def get_short_url(self):
+        url_path = reverse("url", kwargs={'shortcode': self.Short}, host='www', scheme='http')
+        return url_path
 

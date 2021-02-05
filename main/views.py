@@ -1,38 +1,61 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from .models import UrlShort
 from django.views import View
+from .forms import SubmitURLForm
+from analytics.models import ClickEvent
 from django.urls import reverse
 from UrlShortener import settings
+
+
 # Create your views here.
+def index(request):
+    return render(request, 'index.html')
 
 
-class Home(View):
+class Create(View):
     def get(self, request, *args, **kwargs):
+        form = SubmitURLForm()
         obj = UrlShort.objects.all()
         superuser = False
         if request.user.is_superuser:
             superuser = True
         context = {
             'url': obj,
-            'superuser': superuser
+            'superuser': superuser,
+            'form': form
         }
-        return render(request, 'index.html', context)
+        return render(request, 'create.html', context)
 
     def post(self, request, *args, **kwargs):
-        # print(request.POST.get("url"))
         obj = UrlShort.objects.all()
-        print(obj)
-        # obj.save()
+        form = SubmitURLForm(request.POST)
         context = {
-            'url': obj
+            'url': obj,
+            'form': form
         }
-        return render(request, 'index.html', context)
+        template = "create.html"
+        if form.is_valid():
+            url = form.cleaned_data.get("url")
+            obj, created = UrlShort.objects.get_or_create(Url=url)
+            context = {
+                'url': obj,
+                'created': created,
+            }
+            if created:
+                template = "success.html"
+            else:
+                template = "already-exists.html"
+        return render(request, template, context)
 
 
 def url(request, shortcode=None, *args, **kwargs):
+    # qs = UrlShort.objects.filter(Short=shortcode)
+    # if qs.count() != 1 and not qs.exists():
+    #     return Http404
+    # obj = qs.first()
     obj = get_object_or_404(UrlShort, Short=shortcode)
-    # this is best method as it return 404 error when not found, which is good for url not found
+    print(ClickEvent.objects.create_event(obj))
     return HttpResponseRedirect(obj.Url)
 
     # print(request.user)
@@ -62,4 +85,3 @@ def delete_url(request, id):
         'object': obj
     }
     return render(request, 'delete.html', context)
-

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <header class="masthead">
+            <div class="container">
+                <div class="masthead-heading text-uppercase">Here's Your Short URL &#128512;</div>
+                <div class="container col-md-12">
+                    <h2 style="font-size:4vw;" class="section-subheading text-muted" ><a href="{{ url.get_short_url }}">{{ url.get_short_url }}</a></h2>
+
+                </div>
+
+            </div>
+    </header>
+{% endblock %}

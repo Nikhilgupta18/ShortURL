@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <header class="masthead">
+            <div class="container">
+                <div class="masthead-heading text-uppercase">This URL Already Exists! &#128517;</div>
+                <div class="container col-md-12">
+                    <h2 style="font-size:4vw;" class="section-subheading text-muted" ><a href="{{ url.get_short_url }}">{{ url.get_short_url }}</a></h2>
+                    <p>Count: {{ url.clickevent.count|default:0 }}</p>
+                </div>
+
+            </div>
+    </header>
+{% endblock %}
